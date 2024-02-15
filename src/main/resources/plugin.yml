@@ -1,0 +1,10 @@
+name: MCBriscola
+version: '${project.version}'
+main: com.mailo.mcbriscola.MCBriscola
+api-version: '1.13'
+description: Classic Italian Card Game Briscola in Minecraft
+author: Harly47
+commands:
+  briscola:
+    description: Main command of the plugin
+

@@ -1,16 +1,22 @@
-package com.mailo.mcbriscola;
+package me.mailo.mcbriscola;
 
+import me.mailo.mcbriscola.langs.LangLoader;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class MCBriscola extends JavaPlugin {
+public class MCBriscola extends JavaPlugin {
 
     public static MCBriscola plugin;
     public static String pluginVersion = "v0.1-beta";
 
     @Override
     public void onEnable() {
+        this.getConfig().options().copyDefaults(true);
         plugin=this;
-        getCommand("briscola").setExecutor(new Banco());
+        getCommand("briscola").setExecutor(new Toa());
+        getCommand("briscola").setTabCompleter(new BriscolaTabCompleter());
+        LangLoader langLoader = new LangLoader(this);
+        System.out.println(langLoader.get("welcome_mess"));
+
     }
 
     public static MCBriscola getInstance(){

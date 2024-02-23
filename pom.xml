@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.mailo</groupId>
+  <groupId>me.mailo</groupId>
   <artifactId>MCBriscola</artifactId>
   <version>0.1-beta</version>
   <packaging>jar</packaging>
@@ -66,6 +66,11 @@
           <artifactId>spigot-api</artifactId>
           <version>1.20.1-R0.1-SNAPSHOT</version>
           <scope>provided</scope>
+      </dependency>
+      <dependency>
+          <groupId>commons-io</groupId>
+          <artifactId>commons-io</artifactId>
+          <version>2.15.1</version>
       </dependency>
   </dependencies>
 </project>

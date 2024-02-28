@@ -1,7 +1,7 @@
 name: MCBriscola
 version: '${project.version}'
-main: com.mailo.mcbriscola.MCBriscola
-api-version: '1.13'
+main: me.mailo.mcbriscola.MCBriscola
+api-version: '1.20'
 description: Classic Italian Card Game Briscola in Minecraft
 author: Harly47
 commands:

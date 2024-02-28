@@ -16,21 +16,123 @@ public class LangLoader {
     public LangLoader(Plugin plugin) {
         File langDir = new File(plugin.getDataFolder(), "langs/");
         File defaultLangFile = new File(plugin.getDataFolder(), "langs/en_US.yml");
-        if (!langDir.isDirectory()) {
+        File itaLangFile = new File(plugin.getDataFolder(),"langs/it_IT.yml");
+        File VENETOLANGFILE = new File(plugin.getDataFolder(),"langs/vec_VEC.yml");
+
+        if (!langDir.isDirectory()){
             langDir.mkdir();
             try {
-                InputStream stream = plugin.getResource("en_US.yml");
-                FileUtils.copyInputStreamToFile(stream,defaultLangFile);
+                InputStream streamEng = plugin.getResource("langs/en_US.yml");
+                InputStream streamIta = plugin.getResource("langs/it_IT.yml");
+                InputStream streamVec = plugin.getResource("langs/vec_VEC.yml");
+                FileUtils.copyInputStreamToFile(streamEng,defaultLangFile);
+                FileUtils.copyInputStreamToFile(streamIta, itaLangFile);
+                FileUtils.copyInputStreamToFile(streamVec,VENETOLANGFILE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else if (langDir.isDirectory() && !defaultLangFile.isFile() && !itaLangFile.isFile() && !VENETOLANGFILE.isFile()) {
+            try {
+                InputStream streamEng = plugin.getResource("langs/en_US.yml");
+                InputStream streamIta = plugin.getResource("langs/it_IT.yml");
+                InputStream streamVec = plugin.getResource("langs/vec_VEC.yml");
+                FileUtils.copyInputStreamToFile(streamEng,defaultLangFile);
+                FileUtils.copyInputStreamToFile(streamIta, itaLangFile);
+                FileUtils.copyInputStreamToFile(streamVec,VENETOLANGFILE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else if (langDir.isDirectory() && defaultLangFile.isFile() && !VENETOLANGFILE.isFile() && !itaLangFile.isFile()) {
+            try {
+                InputStream streamIta = plugin.getResource("langs/it_IT.yml");
+                InputStream streamVec = plugin.getResource("langs/vec_VEC.yml");
+                FileUtils.copyInputStreamToFile(streamIta, itaLangFile);
+                FileUtils.copyInputStreamToFile(streamVec,VENETOLANGFILE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else if (langDir.isDirectory() && defaultLangFile.isFile() && VENETOLANGFILE.isFile() && !itaLangFile.isFile()) {
+            try {
+                InputStream streamIta = plugin.getResource("langs/it_IT.yml");
+                FileUtils.copyInputStreamToFile(streamIta, itaLangFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else if (langDir.isDirectory() && defaultLangFile.isFile() && !VENETOLANGFILE.isFile() && itaLangFile.isFile()) {
+            try {
+                InputStream streamVec = plugin.getResource("langs/vec_VEC.yml");
+                FileUtils.copyInputStreamToFile(streamVec,VENETOLANGFILE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else if (langDir.isDirectory() && !defaultLangFile.isFile() && VENETOLANGFILE.isFile() && !itaLangFile.isFile()) {
+            try {
+                InputStream streamEng = plugin.getResource("langs/en_US.yml");
+                InputStream streamIta = plugin.getResource("langs/it_IT.yml");
+                FileUtils.copyInputStreamToFile(streamEng,defaultLangFile);
+                FileUtils.copyInputStreamToFile(streamIta, itaLangFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else if (langDir.isDirectory() && defaultLangFile.isFile() && VENETOLANGFILE.isFile() && !itaLangFile.isFile()) {
+            try {
+                InputStream streamIta = plugin.getResource("langs/it_IT.yml");
+                FileUtils.copyInputStreamToFile(streamIta, itaLangFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (langDir.isDirectory() && !defaultLangFile.isFile() && VENETOLANGFILE.isFile() && itaLangFile.isFile()) {
+            try {
+                InputStream streamEng = plugin.getResource("langs/en_US.yml");
+                FileUtils.copyInputStreamToFile(streamEng,defaultLangFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (langDir.isDirectory() && !defaultLangFile.isFile() && !VENETOLANGFILE.isFile() && itaLangFile.isFile()){
+            try {
+                InputStream streamEng = plugin.getResource("langs/en_US.yml");
+                InputStream streamVec = plugin.getResource("langs/vec_VEC.yml");
+                FileUtils.copyInputStreamToFile(streamEng,defaultLangFile);
+                FileUtils.copyInputStreamToFile(streamVec,VENETOLANGFILE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (langDir.isDirectory() && defaultLangFile.isFile() && !VENETOLANGFILE.isFile() && itaLangFile.isFile()) {
+            try {
+                InputStream streamVec = plugin.getResource("langs/vec_VEC.yml");
+                FileUtils.copyInputStreamToFile(streamVec,VENETOLANGFILE);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else if (langDir.isDirectory() && !defaultLangFile.isFile() && VENETOLANGFILE.isFile() && itaLangFile.isFile()) {
+            try {
+                InputStream streamEng = plugin.getResource("langs/en_US.yml");
+                FileUtils.copyInputStreamToFile(streamEng,defaultLangFile);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
 
         if (plugin.getConfig().getString("settings.locale") != null && plugin.getConfig().getString("settings.locale").equals("en_US")) {
             FileConfiguration trans = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "langs/" + plugin.getConfig().getString("locale") + ".yml"));
             for (String tran : trans.getKeys(false)) {
                 transMap.put(tran, trans.getString(tran));
             }
+
+        } else if (plugin.getConfig().getString("settings.locale") != null && plugin.getConfig().getString("settings.locale").equals("it_IT")){
+            FileConfiguration trans = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(),"langs/" + plugin.getConfig().getString("locale") + ".yml"));
+            for (String tran : trans.getKeys(false)){
+                transMap.put(tran,trans.getString(tran));
+            }
+
         } else {
             FileConfiguration trans = YamlConfiguration.loadConfiguration(defaultLangFile);
             for (String tran : trans.getKeys(false)) {

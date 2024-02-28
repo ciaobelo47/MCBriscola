@@ -1,5 +1,6 @@
-package me.mailo.mcbriscola;
+package me.mailo.mcbriscola.Game;
 
+import me.mailo.mcbriscola.MCBriscola;
 import me.mailo.mcbriscola.langs.LangLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -19,13 +20,10 @@ public class Toa implements CommandExecutor {
         Player p = (Player) sender;
         if (command.getName().equalsIgnoreCase("briscola")){
             if (args[0].equalsIgnoreCase("start")){
-                ToaCreate();
                 p.openInventory(Toa);
             } else if (args[0].equalsIgnoreCase("test")){
                 p.sendMessage(langLoader.get("welcome_mess"));
                 System.out.println(langLoader.get("welcome_mess"));
-                p.sendMessage(String.valueOf(MCBriscola.getInstance().getConfig().getBoolean("settings.easteregg")));
-                System.out.println(MCBriscola.getInstance().getConfig().getBoolean("settings.easteregg"));
 
             }
         }

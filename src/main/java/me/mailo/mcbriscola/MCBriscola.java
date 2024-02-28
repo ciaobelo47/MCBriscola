@@ -1,5 +1,7 @@
 package me.mailo.mcbriscola;
 
+import me.mailo.mcbriscola.Game.Gioco;
+import me.mailo.mcbriscola.Game.Toa;
 import me.mailo.mcbriscola.langs.LangLoader;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,6 +17,7 @@ public class MCBriscola extends JavaPlugin {
         getCommand("briscola").setExecutor(new Toa());
         getCommand("briscola").setTabCompleter(new BriscolaTabCompleter());
         LangLoader langLoader = new LangLoader(this);
+        getServer().getPluginManager().registerEvents(new Gioco(),this);
         System.out.println(langLoader.get("welcome_mess"));
 
     }

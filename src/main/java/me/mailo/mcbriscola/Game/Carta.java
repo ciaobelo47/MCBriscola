@@ -4,17 +4,19 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import javax.annotation.Nullable;
+
 public class Carta extends ItemStack {
-    private int Value;
-    private Material seme;
-    private int i;
+    private final int Value;
+    private final Material seme;
+    private final int num;
     private ItemMeta meta;
 
 
-    public Carta(int i, String seme) {
+    public Carta(@Nullable Integer num, String seme) {
         Material material = Material.AIR;
         int value = 0;
-        switch (seme){
+        switch (seme) {
             case "Spade":
                 material = Material.DIAMOND_SWORD;
                 break;
@@ -30,7 +32,7 @@ public class Carta extends ItemStack {
         }
         ItemStack questo = new ItemStack(material);
         ItemMeta cartaMeta = questo.getItemMeta();
-        switch(i) {
+        switch (num) {
             case 1:
                 value = 11;
                 cartaMeta.setDisplayName("Asso di " + seme);
@@ -53,13 +55,13 @@ public class Carta extends ItemStack {
                 break;
             default:
                 value = 0;
-                cartaMeta.setDisplayName(i + " di " + seme);
+                cartaMeta.setDisplayName(num + " di " + seme);
                 break;
         }
         this.Value = value;
         this.seme = material;
         this.setType(material);
-        this.i = i;
+        this.num = num;
         this.setAmount(1);
         this.setItemMeta(cartaMeta);
 

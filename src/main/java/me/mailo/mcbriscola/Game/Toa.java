@@ -3,6 +3,7 @@ package me.mailo.mcbriscola.Game;
 import me.mailo.mcbriscola.MCBriscola;
 import me.mailo.mcbriscola.langs.LangLoader;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -12,24 +13,53 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Toa implements CommandExecutor {
+
     public static LangLoader langLoader = new LangLoader(MCBriscola.plugin);
     public static Inventory Toa = Bukkit.createInventory(Bukkit.getPlayer(""), 45, "Ea Toa dea Briscola");
+    private final Logger logger = MCBriscola.getInstance().getLogger();
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String s, String[] args) {
         Player p = (Player) sender;
-        if (command.getName().equalsIgnoreCase("briscola")){
-            if (args[0].equalsIgnoreCase("start")){
-                p.openInventory(Toa);
-            } else if (args[0].equalsIgnoreCase("test")){
+        if (command.getName().equalsIgnoreCase("briscola")) {
+            if (args[0].equalsIgnoreCase("start")) {
+                if (args.length > 1) {
+                    Player p2 = Bukkit.getPlayer(args[1]);
+                    p.sendTitle(ChatColor.RED + "YOU ARE PLAYER 1", null, 3, 10, 3);
+                    p2.sendTitle(ChatColor.RED + "YOU ARE PLAYER 2", null, 3, 10, 3);
+                    logger.log(Level.WARNING, "Started Multiplayer Game...");
+                    Toa.clear();
+                    p.openInventory(Toa);
+                    p2.openInventory(Toa);
+
+                } else {
+                    p.sendTitle(ChatColor.RED + "YOU ARE PLAYER 1", null, 3, 10, 3);
+                    logger.log(Level.WARNING, "Started Singleplayer Game...");
+                    Toa.clear();
+                    p.openInventory(Toa);
+                }
+            } else if (args[0].equalsIgnoreCase("test")) {
                 p.sendMessage(langLoader.get("welcome_mess"));
-                System.out.println(langLoader.get("welcome_mess"));
+                logger.log(Level.SEVERE, langLoader.get("welcome_mess"));
+                logger.log(Level.WARNING, langLoader.get("welcome_mess"));
+
+            } else {
+                p.sendMessage(ChatColor.RED + langLoader.get("arg_miss"));
+                logger.log(Level.SEVERE, langLoader.get("arg_miss"));
 
             }
         }
         return false;
     }
 
+    /**
+     * Usata solo come funzione di debug.
+     */
+    @Deprecated
     private void ToaCreate() {
         ItemStack denari = new ItemStack(Material.EMERALD);
         ItemStack bastoni = new ItemStack(Material.STICK);
@@ -47,10 +77,10 @@ public class Toa implements CommandExecutor {
         bastoni.setItemMeta(metaBastoni);
         spade.setItemMeta(metaSpade);
         coppe.setItemMeta(metaCoppe);
-        Toa.setItem(41,denari);
-        Toa.setItem(42,bastoni);
-        Toa.setItem(43,spade);
-        Toa.setItem(44,coppe);
+        Toa.setItem(41, denari);
+        Toa.setItem(42, bastoni);
+        Toa.setItem(43, spade);
+        Toa.setItem(44, coppe);
         for (int i = 2; i < 11; i++) {
             metaDenari.setDisplayName(i + " di Denari");
             metaBastoni.setDisplayName(i + " di Bastoni");
@@ -60,10 +90,10 @@ public class Toa implements CommandExecutor {
             bastoni.setItemMeta(metaBastoni);
             spade.setItemMeta(metaSpade);
             coppe.setItemMeta(metaCoppe);
-            Toa.setItem(i,denari);
-            Toa.setItem(i+10,bastoni);
-            Toa.setItem(i+20,spade);
-            Toa.setItem(i+30,coppe);
+            Toa.setItem(i, denari);
+            Toa.setItem(i + 10, bastoni);
+            Toa.setItem(i + 20, spade);
+            Toa.setItem(i + 30, coppe);
         }
 
 

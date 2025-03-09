@@ -2,12 +2,9 @@ package me.mailo.mcbriscola;
 
 import me.mailo.mcbriscola.Game.Gioco;
 import me.mailo.mcbriscola.Game.Toa;
-import me.mailo.mcbriscola.langs.LangLoader;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class MCBriscola extends JavaPlugin {
 

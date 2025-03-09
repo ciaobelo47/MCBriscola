@@ -7,13 +7,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import javax.annotation.Nullable;
 
 public class Carta extends ItemStack {
-    private final int Value;
+    private final int value;
     private final Material seme;
     private final int num;
     private ItemMeta meta;
 
 
-    public Carta(@Nullable Integer num, String seme) {
+    public Carta(Integer num, String seme) {
         Material material = Material.AIR;
         int value = 0;
         switch (seme) {
@@ -30,6 +30,7 @@ public class Carta extends ItemStack {
                 material = Material.EMERALD;
                 break;
         }
+
         ItemStack questo = new ItemStack(material);
         ItemMeta cartaMeta = questo.getItemMeta();
         switch (num) {
@@ -58,13 +59,40 @@ public class Carta extends ItemStack {
                 cartaMeta.setDisplayName(num + " di " + seme);
                 break;
         }
-        this.Value = value;
+        this.value = value;
         this.seme = material;
         this.setType(material);
         this.num = num;
         this.setAmount(1);
         this.setItemMeta(cartaMeta);
+    }
 
+    public Carta(ItemStack item) {
+        String[] valueSemeArr = item.getItemMeta().getItemName().split(" di ");
 
+        System.out.println(valueSemeArr);
+        this.num = 0;
+        this.value = 0;
+        this.seme = Material.AIR;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public Material getSeme() {
+        return seme;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public ItemMeta getMeta() {
+        return meta;
+    }
+
+    public void setMeta(ItemMeta meta) {
+        this.meta = meta;
     }
 }

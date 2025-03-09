@@ -19,7 +19,8 @@ import java.util.logging.Logger;
 public class Toa implements CommandExecutor {
 
     public static LangLoader langLoader = new LangLoader(MCBriscola.plugin);
-    public static Inventory Toa = Bukkit.createInventory(Bukkit.getPlayer(""), 45, "Ea Toa dea Briscola");
+    public static Inventory ToaPl1 = Bukkit.createInventory(Bukkit.getPlayer(""), 45, "Ea Toa dea Briscola - Player 1");
+    public static Inventory ToaPl2 = Bukkit.createInventory(Bukkit.getPlayer(""), 45, "Ea Toa dea Briscola - Player 2");
     private final Logger logger = MCBriscola.getInstance().getLogger();
 
     @Override
@@ -28,19 +29,21 @@ public class Toa implements CommandExecutor {
         if (command.getName().equalsIgnoreCase("briscola")) {
             if (args[0].equalsIgnoreCase("start")) {
                 if (args.length > 1) {
-                    Player p2 = Bukkit.getPlayer(args[1]);
                     p.sendTitle(ChatColor.RED + "YOU ARE PLAYER 1", null, 3, 10, 3);
-                    p2.sendTitle(ChatColor.RED + "YOU ARE PLAYER 2", null, 3, 10, 3);
+                    Bukkit.getPlayer(args[1]).sendTitle(ChatColor.RED + "YOU ARE PLAYER 2", null, 3, 10, 3);
                     logger.log(Level.WARNING, "Started Multiplayer Game...");
-                    Toa.clear();
-                    p.openInventory(Toa);
-                    p2.openInventory(Toa);
+                    ToaPl1.clear();
+                    ToaPl2.clear();
+                    Gioco.singlePlayer = false;
+                    p.openInventory(ToaPl1);
+                    Bukkit.getPlayer(args[1]).openInventory(ToaPl2);
 
                 } else {
                     p.sendTitle(ChatColor.RED + "YOU ARE PLAYER 1", null, 3, 10, 3);
                     logger.log(Level.WARNING, "Started Singleplayer Game...");
-                    Toa.clear();
-                    p.openInventory(Toa);
+                    ToaPl1.clear();
+                    Gioco.singlePlayer = true;
+                    p.openInventory(ToaPl1);
                 }
             } else if (args[0].equalsIgnoreCase("test")) {
                 p.sendMessage(langLoader.get("welcome_mess"));
@@ -49,8 +52,6 @@ public class Toa implements CommandExecutor {
 
             } else {
                 p.sendMessage(ChatColor.RED + langLoader.get("arg_miss"));
-                logger.log(Level.SEVERE, langLoader.get("arg_miss"));
-
             }
         }
         return false;
@@ -77,10 +78,10 @@ public class Toa implements CommandExecutor {
         bastoni.setItemMeta(metaBastoni);
         spade.setItemMeta(metaSpade);
         coppe.setItemMeta(metaCoppe);
-        Toa.setItem(41, denari);
-        Toa.setItem(42, bastoni);
-        Toa.setItem(43, spade);
-        Toa.setItem(44, coppe);
+        ToaPl1.setItem(41, denari);
+        ToaPl1.setItem(42, bastoni);
+        ToaPl1.setItem(43, spade);
+        ToaPl1.setItem(44, coppe);
         for (int i = 2; i < 11; i++) {
             metaDenari.setDisplayName(i + " di Denari");
             metaBastoni.setDisplayName(i + " di Bastoni");
@@ -90,10 +91,10 @@ public class Toa implements CommandExecutor {
             bastoni.setItemMeta(metaBastoni);
             spade.setItemMeta(metaSpade);
             coppe.setItemMeta(metaCoppe);
-            Toa.setItem(i, denari);
-            Toa.setItem(i + 10, bastoni);
-            Toa.setItem(i + 20, spade);
-            Toa.setItem(i + 30, coppe);
+            ToaPl1.setItem(i, denari);
+            ToaPl1.setItem(i + 10, bastoni);
+            ToaPl1.setItem(i + 20, spade);
+            ToaPl1.setItem(i + 30, coppe);
         }
 
 

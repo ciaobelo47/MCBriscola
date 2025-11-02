@@ -1,7 +1,6 @@
 package me.mailo.mcbriscola.Game;
 
 import me.mailo.mcbriscola.MCBriscola;
-import me.mailo.mcbriscola.langs.LangLoader;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,8 +16,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Toa implements CommandExecutor {
-
-    public static LangLoader langLoader = new LangLoader(MCBriscola.plugin);
     public static Inventory ToaPl1 = Bukkit.createInventory(Bukkit.getPlayer(""), 45, "Ea Toa dea Briscola - Player 1");
     public static Inventory ToaPl2 = Bukkit.createInventory(Bukkit.getPlayer(""), 45, "Ea Toa dea Briscola - Player 2");
     private final Logger logger = MCBriscola.getInstance().getLogger();
@@ -46,12 +43,12 @@ public class Toa implements CommandExecutor {
                     p.openInventory(ToaPl1);
                 }
             } else if (args[0].equalsIgnoreCase("test")) {
-                p.sendMessage(langLoader.get("welcome_mess"));
-                logger.log(Level.SEVERE, langLoader.get("welcome_mess"));
-                logger.log(Level.WARNING, langLoader.get("welcome_mess"));
+                p.sendMessage(MCBriscola.langLoader.get("welcome_mess"));
+                logger.log(Level.SEVERE, MCBriscola.langLoader.get("welcome_mess"));
+                logger.log(Level.WARNING, MCBriscola.langLoader.get("welcome_mess"));
 
             } else {
-                p.sendMessage(ChatColor.RED + langLoader.get("arg_miss"));
+                p.sendMessage(ChatColor.RED + MCBriscola.langLoader.get("arg_miss"));
             }
         }
         return false;

@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public class GamePlayer {
 
     private Player MCplayer;
-    private boolean turn;
     private ArrayList<Carta> mano = new ArrayList<>(3);
 
     public GamePlayer(Player MCplayer) {
@@ -25,14 +24,6 @@ public class GamePlayer {
         return MCplayer;
     }
 
-    public boolean isTurn() {
-        return turn;
-    }
-
-    public void setTurn(boolean turn) {
-        this.turn = turn;
-    }
-
     public ArrayList<Carta> getMano() {
         return mano;
     }
@@ -41,5 +32,13 @@ public class GamePlayer {
         for (int i = 0; i < 3; i++) {
             this.mano.add(mazzo.getCartaRnd());
         }
+    }
+
+    @Override
+    public String toString() {
+        return "GamePlayer{" +
+                "MCplayer=" + MCplayer +
+                ", mano=" + mano +
+                '}';
     }
 }

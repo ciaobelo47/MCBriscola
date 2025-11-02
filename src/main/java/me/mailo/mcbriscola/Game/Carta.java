@@ -4,8 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import javax.annotation.Nullable;
-
 public class Carta extends ItemStack {
     private final int value;
     private final Material seme;
@@ -68,12 +66,36 @@ public class Carta extends ItemStack {
     }
 
     public Carta(ItemStack item) {
-        String[] valueSemeArr = item.getItemMeta().getItemName().split(" di ");
+        this.seme = item.getType();
 
-        System.out.println(valueSemeArr);
-        this.num = 0;
-        this.value = 0;
-        this.seme = Material.AIR;
+        String valueSemeArr = item.getItemMeta().getDisplayName().split(" di ")[0];
+
+        switch (valueSemeArr) {
+            case "Asso":
+                this.num = 1;
+                this.value = CartaValues.ASSO;
+                break;
+            case "3":
+                this.num = 3;
+                this.value = CartaValues.TRE;
+                break;
+            case "Fante":
+                this.num = 8;
+                this.value = CartaValues.FANTE;
+                break;
+            case "Cavallo":
+                this.num = 9;
+                this.value = CartaValues.CAVALLO;
+                break;
+            case "Re":
+                this.num = 10;
+                this.value = CartaValues.RE;
+                break;
+            default:
+                this.num = Integer.parseInt(valueSemeArr);
+                this.value = 0;
+                break;
+        }
     }
 
     public int getValue() {

@@ -2,6 +2,7 @@ package me.mailo.mcbriscola;
 
 import me.mailo.mcbriscola.Game.Gioco;
 import me.mailo.mcbriscola.Game.Toa;
+import me.mailo.mcbriscola.langs.LangLoader;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
@@ -9,6 +10,7 @@ import java.util.logging.Level;
 public class MCBriscola extends JavaPlugin {
 
     public static MCBriscola plugin;
+    public static LangLoader langLoader;
     private static final String pluginVersion = "v0.1-beta";
 
     @Override
@@ -18,6 +20,7 @@ public class MCBriscola extends JavaPlugin {
         getCommand("briscola").setExecutor(new Toa());
         getCommand("briscola").setTabCompleter(new BriscolaTabCompleter());
         getServer().getPluginManager().registerEvents(new Gioco(), this);
+        langLoader = new LangLoader(plugin);
 
     }
 

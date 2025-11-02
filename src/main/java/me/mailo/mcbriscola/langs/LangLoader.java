@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class LangLoader {
-    HashMap<String, String> transMap = new HashMap<>();
+    private HashMap<String, String> transMap = new HashMap<>();
     private Logger logger = MCBriscola.getInstance().getLogger();
 
     public LangLoader(Plugin plugin) {
@@ -22,6 +22,7 @@ public class LangLoader {
         File defaultLangFile = new File(plugin.getDataFolder(), "langs/en_US.yml");
         File itaLangFile = new File(plugin.getDataFolder(), "langs/it_IT.yml");
         File VENETOLANGFILE = new File(plugin.getDataFolder(), "langs/vec_VEC.yml");
+        FileConfiguration configFile = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "config.yml"));
 
         if (!langDir.isDirectory()) {
             logger.log(Level.WARNING,"Language Files don't exist, creating ones...");
@@ -135,24 +136,21 @@ public class LangLoader {
             }
         }
 
-
-        if (plugin.getConfig().getString("settings.locale") != null && plugin.getConfig().getString("settings.locale").equals("en_US")) {
+        if (configFile.getString("settings.locale") != null) {
             FileConfiguration trans = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "langs/" + plugin.getConfig().getString("locale") + ".yml"));
             for (String tran : trans.getKeys(false)) {
                 transMap.put(tran, trans.getString(tran));
             }
 
-        } else if (plugin.getConfig().getString("settings.locale") != null && plugin.getConfig().getString("settings.locale").equals("it_IT")) {
-            FileConfiguration trans = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "langs/" + plugin.getConfig().getString("locale") + ".yml"));
-            for (String tran : trans.getKeys(false)) {
-                transMap.put(tran, trans.getString(tran));
-            }
+            logger.log(Level.INFO, "Successfully loaded selected language!");
 
         } else {
             FileConfiguration trans = YamlConfiguration.loadConfiguration(defaultLangFile);
             for (String tran : trans.getKeys(false)) {
                 transMap.put(tran, trans.getString(tran));
             }
+
+            logger.log(Level.INFO, "Successfully loaded default language");
         }
     }
 

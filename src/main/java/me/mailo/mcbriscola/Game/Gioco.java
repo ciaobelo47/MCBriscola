@@ -10,14 +10,18 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Gioco implements Listener {
 
     public static boolean singlePlayer = false;
+    public boolean gameFinished = true;
     private final ItemStack BLANK = new ItemStack(Material.PAPER);
     private final ItemMeta BLANKMETA = BLANK.getItemMeta();
     private final Logger logger = MCBriscola.getInstance().getLogger();
@@ -25,6 +29,9 @@ public class Gioco implements Listener {
     private Mazzo mazzoToa;
     private int playerTurn;
     private int lastPlayerWon = 0;
+    private Carta briscola;
+    private ItemStack pointCounterPL1 = new ItemStack(Material.PLAYER_HEAD);
+    private ItemStack pointCounterPL2 = new ItemStack(Material.PLAYER_HEAD);
 
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event) {
@@ -34,7 +41,7 @@ public class Gioco implements Listener {
             //Creating players
             if (singlePlayer) {
                 players.add(new GamePlayer(event.getViewers().get(0)));
-                players.add(new Bot());
+                players.add(new Bot(null));
             } else {
                 if (event.getView().getTitle().equals("Ea Toa dea Briscola - Player 1")) {
                     players.add(new GamePlayer(event.getViewers().get(0)));
@@ -50,13 +57,29 @@ public class Gioco implements Listener {
             logger.log(Level.SEVERE, players.toString());
 
             if (players.size() == 2) {
+                SkullMeta counterPl1Meta = (SkullMeta) pointCounterPL1.getItemMeta();
+                counterPl1Meta.setOwner(players.get(0).getMCplayer().getDisplayName());
+                counterPl1Meta.setDisplayName(players.get(0).getMCplayer().getDisplayName());
+                List<String> lore = new ArrayList<>();
+                lore.add("Current Points: 0");
+                counterPl1Meta.setLore(lore);
+                pointCounterPL1.setItemMeta(counterPl1Meta);
+
+                SkullMeta counterPl2Meta = (SkullMeta) pointCounterPL2.getItemMeta();
+                counterPl2Meta.setOwner(players.get(1).getMCplayer().getDisplayName());
+                counterPl2Meta.setDisplayName(players.get(1).getMCplayer().getDisplayName());
+                List<String> lore2 = new ArrayList<>();
+                lore2.add("Current Points: 0");
+                counterPl2Meta.setLore(lore2);
+                pointCounterPL2.setItemMeta(counterPl2Meta);
+
                 players.get(0).setMano(mazzoToa);
                 players.get(1).setMano(mazzoToa);
 
                 // Creating ToaPl1
                 BLANKMETA.setDisplayName("???");
                 BLANK.setItemMeta(BLANKMETA);
-                Carta briscola = mazzoToa.getCartaRnd();
+                briscola = mazzoToa.getCartaRnd();
 
                 Toa.ToaPl1.setItem(18, briscola);
                 Toa.ToaPl1.setItem(3, BLANK);
@@ -65,6 +88,7 @@ public class Gioco implements Listener {
                 Toa.ToaPl1.setItem(41, players.get(0).getMano().get(0));
                 Toa.ToaPl1.setItem(40, players.get(0).getMano().get(1));
                 Toa.ToaPl1.setItem(39, players.get(0).getMano().get(2));
+                Toa.ToaPl1.setItem(44, pointCounterPL1);
 
                 // creatin toaPl2
                 if (event.getView().getTitle().equalsIgnoreCase("Ea Toa dea Briscola - Player 2")) {
@@ -75,21 +99,25 @@ public class Gioco implements Listener {
                     event.getInventory().setItem(41, players.get(1).getMano().get(0));
                     event.getInventory().setItem(40, players.get(1).getMano().get(1));
                     event.getInventory().setItem(39, players.get(1).getMano().get(2));
+                    event.getInventory().setItem(44, pointCounterPL2);
                 }
 
                 playerTurn = 0;
+                gameFinished = false;
             }
         }
     }
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        if (event.getView().getTitle().contains("Ea Toa dea Briscola")) {
-            for (GamePlayer p : players) {
-                p.getMCplayer().sendMessage(ChatColor.RED + MCBriscola.langLoader.get("closed_game"));
-            }
+        if (!gameFinished) {
+            if (event.getView().getTitle().contains("Ea Toa dea Briscola")) {
+                for (GamePlayer p : players) {
+                    p.getMCplayer().sendMessage(ChatColor.RED + MCBriscola.langLoader.get("closed_game"));
+                }
 
-            players.clear();
+                players.clear();
+            }
         }
     }
 
@@ -105,6 +133,16 @@ public class Gioco implements Listener {
 
     private void multiplayerTurno(InventoryClickEvent event) {
         logger.log(Level.SEVERE, "Player turn: " + playerTurn);
+
+        if (gameFinished) {
+            for (GamePlayer p : players) {
+                p.getMCplayer().closeInventory();
+            }
+
+            annouceVictory();
+            event.setCancelled(true);
+            return;
+        }
 
         if (event.getCurrentItem() == null || event.getSlot() == 18 || event.getCurrentItem().equals(BLANK)) {
             event.setCancelled(true);
@@ -142,6 +180,24 @@ public class Gioco implements Listener {
         event.setCancelled(true);
     }
 
+    private void annouceVictory() {
+        int playerVictory;
+
+        if (players.get(0).getSommaPunti() > players.get(1).getSommaPunti()) {
+            playerVictory = 0;
+        } else {
+            playerVictory = 1;
+        }
+
+        for (GamePlayer p : players) {
+            p.getMCplayer().sendMessage(ChatColor.GREEN + "------------------ MCBriscola ------------------");
+            p.getMCplayer().sendMessage(ChatColor.GREEN + "The player " + players.get(playerVictory).getMCplayer().getDisplayName() + " has won this briscola game!");
+            p.getMCplayer().sendMessage(ChatColor.GREEN + players.get(0).getMCplayer().getDisplayName() + " somma punti: " + players.get(0).getSommaPunti());
+            p.getMCplayer().sendMessage(ChatColor.GREEN + players.get(1).getMCplayer().getDisplayName() + " somma punti: " + players.get(1).getSommaPunti());
+            p.getMCplayer().sendMessage(ChatColor.GREEN + "------------------------------------------------");
+        }
+    }
+
     private void repaintInventory(InventoryClickEvent event) {
         switch (event.getSlot()) {
             case 39: players.get(playerTurn).getMano().set(2, null); break;
@@ -156,23 +212,53 @@ public class Gioco implements Listener {
     private void checkWin(Carta c1, Carta c2) {
         logger.log(Level.INFO, "Checking Win...");
 
-        if (c1.getValue() > c2.getValue()) {
+        if (isBriscola(c1)) {
             playerTurn = lastPlayerWon;
+            players.get(lastPlayerWon).addPunti(c1.getValue());
+        } else if (isBriscola(c2)) {
+            assignWin();
+            players.get(lastPlayerWon).addPunti(c2.getValue());
         } else {
-            if (lastPlayerWon == 1) {
-                playerTurn = 0;
-            } else if (lastPlayerWon == 0) {
-                playerTurn = 1;
+            if (c1.getSeme() != c2.getSeme()) {
+                playerTurn = lastPlayerWon;
+                players.get(lastPlayerWon).addPunti(c1.getValue());
+            } else if (c1.getSeme() == c2.getSeme()) {
+                if (c1.getValue() > c2.getValue()) {
+                    playerTurn = lastPlayerWon;
+                    players.get(lastPlayerWon).addPunti(c1.getValue());
+                } else {
+                    assignWin();
+                    players.get(lastPlayerWon).addPunti(c2.getValue());
+                }
+            } else {
+                throw new RuntimeException("BO!");
             }
-
-            lastPlayerWon = playerTurn;
         }
 
         clearBanco();
 
         fullManos();
 
-        logger.log(Level.SEVERE, players.toString());
+        updateGUIPointsAndTurn();
+    }
+
+    private void updateGUIPointsAndTurn() {
+        Toa.ToaPl1.getItem(44).getItemMeta().getLore().set(0, "Current Points: " + players.get(0).getSommaPunti());
+        Toa.ToaPl2.getItem(44).getItemMeta().getLore().set(0, "Current Points: " + players.get(1).getSommaPunti());
+    }
+
+    private void assignWin() {
+        if (lastPlayerWon == 1) {
+            playerTurn = 0;
+        } else if (lastPlayerWon == 0) {
+            playerTurn = 1;
+        }
+
+        lastPlayerWon = playerTurn;
+    }
+
+    private boolean isBriscola(Carta c) {
+        return c.getSeme() == briscola.getSeme();
     }
 
     private void clearBanco() {
@@ -182,15 +268,33 @@ public class Gioco implements Listener {
         Toa.ToaPl2.clear(23);
     }
 
+    /**
+     *
+     * @return true if mazzo has carte, false if mazzo is empty
+     */
     private void fullManos() {
         for (GamePlayer p : players) {
             for (int i = 0; i < p.getMano().size(); i++) {
                 if (p.getMano().get(i) == null) {
                     try {
                         p.getMano().set(i, mazzoToa.getCartaRnd());
-                    } catch (IndexOutOfBoundsException ignored) {}
+                    } catch (Exception ignored) {}
                 }
             }
+        }
+
+        if (players.get(0).getMano().stream().allMatch(Objects::isNull) && !(players.get(1).getMano().stream().allMatch(Objects::isNull))) {
+            // briscola to player 0
+            players.get(0).getMano().set(0, briscola);
+            Toa.ToaPl1.clear(18);
+            Toa.ToaPl2.clear(18);
+        } else if (players.get(1).getMano().stream().allMatch(Objects::isNull) && !(players.get(0).getMano().stream().allMatch(Objects::isNull))) {
+            // briscola to player 1
+            players.get(1).getMano().set(0, briscola);
+            Toa.ToaPl1.clear(18);
+            Toa.ToaPl2.clear(18);
+        } else if (players.get(0).getMano().stream().allMatch(Objects::isNull) && players.get(1).getMano().stream().allMatch(Objects::isNull)) {
+            gameFinished = true;
         }
 
         Toa.ToaPl1.setItem(41, players.get(0).getMano().get(0));

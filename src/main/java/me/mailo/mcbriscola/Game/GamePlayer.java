@@ -9,6 +9,7 @@ public class GamePlayer {
 
     private Player MCplayer;
     private ArrayList<Carta> mano = new ArrayList<>(3);
+    private int sommaPunti = 0;
 
     public GamePlayer(Player MCplayer) {
         this.MCplayer = MCplayer;
@@ -32,6 +33,18 @@ public class GamePlayer {
         for (int i = 0; i < 3; i++) {
             this.mano.add(mazzo.getCartaRnd());
         }
+    }
+
+    public int getSommaPunti() {
+        return sommaPunti;
+    }
+
+    public void setSommaPunti(int sommaPunti) {
+        this.sommaPunti = sommaPunti;
+    }
+
+    public void addPunti(int punti) {
+        this.sommaPunti += punti;
     }
 
     @Override

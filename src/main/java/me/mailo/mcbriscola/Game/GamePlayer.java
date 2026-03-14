@@ -7,8 +7,8 @@ import java.util.ArrayList;
 
 public class GamePlayer {
 
-    private Player MCplayer;
-    private ArrayList<Carta> mano = new ArrayList<>(3);
+    private final Player MCplayer;
+    private final ArrayList<Carta> mano = new ArrayList<>(3);
     private int sommaPunti = 0;
 
     public GamePlayer(Player MCplayer) {
@@ -18,8 +18,6 @@ public class GamePlayer {
     public GamePlayer(HumanEntity MCplayer) {
         this.MCplayer = (Player) MCplayer;
     }
-
-    public GamePlayer() {}
 
     public Player getMCplayer() {
         return MCplayer;

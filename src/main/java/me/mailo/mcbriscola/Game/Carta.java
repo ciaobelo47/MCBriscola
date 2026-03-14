@@ -13,7 +13,7 @@ public class Carta extends ItemStack {
 
     public Carta(Integer num, String seme) {
         Material material = Material.AIR;
-        int value = 0;
+        int value;
         switch (seme) {
             case "Spade":
                 material = Material.DIAMOND_SWORD;
@@ -31,6 +31,7 @@ public class Carta extends ItemStack {
 
         ItemStack questo = new ItemStack(material);
         ItemMeta cartaMeta = questo.getItemMeta();
+        assert cartaMeta != null;
         switch (num) {
             case 1:
                 value = 11;

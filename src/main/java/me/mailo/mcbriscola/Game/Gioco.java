@@ -19,7 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Gioco implements Listener {
-
     public static boolean singlePlayer = false;
     public boolean gameFinished = true;
     private final ItemStack BLANK = new ItemStack(Material.PAPER);
@@ -30,8 +29,8 @@ public class Gioco implements Listener {
     private int playerTurn;
     private int lastPlayerWon = 0;
     private Carta briscola;
-    private ItemStack pointCounterPL1 = new ItemStack(Material.PLAYER_HEAD);
-    private ItemStack pointCounterPL2 = new ItemStack(Material.PLAYER_HEAD);
+    private final ItemStack pointCounterPL1 = new ItemStack(Material.PLAYER_HEAD);
+    private final ItemStack pointCounterPL2 = new ItemStack(Material.PLAYER_HEAD);
 
     @EventHandler
     public void onInventoryOpen(InventoryOpenEvent event) {
@@ -124,27 +123,18 @@ public class Gioco implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getView().getTitle().equalsIgnoreCase("Ea Toa dea Briscola - Player 1") || event.getView().getTitle().equals("Ea Toa dea Briscola - Player 2")) {
-//            if (singlePlayer) {
-//
-//            }
-            multiplayerTurno(event);
+            if (singlePlayer) {
+
+            } else {
+                multiplayerTurno(event);
+            }
         }
     }
 
     private void multiplayerTurno(InventoryClickEvent event) {
         logger.log(Level.SEVERE, "Player turn: " + playerTurn);
 
-        if (gameFinished) {
-            for (GamePlayer p : players) {
-                p.getMCplayer().closeInventory();
-            }
-
-            annouceVictory();
-            event.setCancelled(true);
-            return;
-        }
-
-        if (event.getCurrentItem() == null || event.getSlot() == 18 || event.getCurrentItem().equals(BLANK)) {
+        if (event.getCurrentItem() == null || event.getSlot() == 18 || event.getSlot() == 44 || event.getCurrentItem().equals(BLANK)) {
             event.setCancelled(true);
             return;
         }
@@ -180,7 +170,7 @@ public class Gioco implements Listener {
         event.setCancelled(true);
     }
 
-    private void annouceVictory() {
+    private void announceVictory() {
         int playerVictory;
 
         if (players.get(0).getSommaPunti() > players.get(1).getSommaPunti()) {
@@ -236,15 +226,40 @@ public class Gioco implements Listener {
         }
 
         clearBanco();
-
         fullManos();
-
         updateGUIPointsAndTurn();
     }
 
     private void updateGUIPointsAndTurn() {
-        Toa.ToaPl1.getItem(44).getItemMeta().getLore().set(0, "Current Points: " + players.get(0).getSommaPunti());
-        Toa.ToaPl2.getItem(44).getItemMeta().getLore().set(0, "Current Points: " + players.get(1).getSommaPunti());
+        ItemStack newPointCounterPL1 = new ItemStack(Material.PLAYER_HEAD);
+        ItemStack newPointCounterPL2 = new ItemStack(Material.PLAYER_HEAD);
+        List<String> lore = new ArrayList<>();
+        List<String> lore2 = new ArrayList<>();
+        SkullMeta newCounterPl1Meta = (SkullMeta) newPointCounterPL1.getItemMeta();
+        SkullMeta newCounterPl2Meta = (SkullMeta) newPointCounterPL2.getItemMeta();
+
+        newCounterPl1Meta.setOwner(players.get(0).getMCplayer().getDisplayName());
+        newCounterPl1Meta.setDisplayName(players.get(0).getMCplayer().getDisplayName());
+        lore.add("Current Points: " + players.get(0).getSommaPunti());
+        newCounterPl1Meta.setLore(lore);
+        newPointCounterPL1.setItemMeta(newCounterPl1Meta);
+
+        newCounterPl2Meta.setOwner(players.get(1).getMCplayer().getDisplayName());
+        newCounterPl2Meta.setDisplayName(players.get(1).getMCplayer().getDisplayName());
+        lore2.add("Current Points: " + players.get(1).getSommaPunti());
+        newCounterPl2Meta.setLore(lore2);
+        newPointCounterPL2.setItemMeta(newCounterPl2Meta);
+        
+        Toa.ToaPl1.setItem(44, newPointCounterPL1);
+        Toa.ToaPl2.setItem(44, newPointCounterPL2);
+
+        if (gameFinished) {
+            for (GamePlayer p : players) {
+                p.getMCplayer().closeInventory();
+            }
+
+            announceVictory();
+        }
     }
 
     private void assignWin() {

@@ -11,7 +11,7 @@ public class MCBriscola extends JavaPlugin {
 
     public static MCBriscola plugin;
     public static LangLoader langLoader;
-    private static final String pluginVersion = "v0.1-beta";
+    private static final String pluginVersion = "v0.5-beta";
 
     @Override
     public void onEnable() {

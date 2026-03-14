@@ -36,11 +36,12 @@ public class Toa implements CommandExecutor {
                     Bukkit.getPlayer(args[1]).openInventory(ToaPl2);
 
                 } else {
-                    p.sendTitle(ChatColor.RED + "YOU ARE PLAYER 1", null, 3, 10, 3);
-                    logger.log(Level.WARNING, "Started Singleplayer Game...");
-                    ToaPl1.clear();
-                    Gioco.singlePlayer = true;
-                    p.openInventory(ToaPl1);
+                    p.sendMessage(ChatColor.AQUA + "Coming soon...");
+//                    p.sendTitle(ChatColor.RED + "YOU ARE PLAYER 1", null, 3, 10, 3);
+//                    logger.log(Level.WARNING, "Started Singleplayer Game...");
+//                    ToaPl1.clear();
+//                    Gioco.singlePlayer = true;
+//                    p.openInventory(ToaPl1);
                 }
             } else if (args[0].equalsIgnoreCase("test")) {
                 p.sendMessage(MCBriscola.langLoader.get("welcome_mess"));
